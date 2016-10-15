@@ -1,0 +1,84 @@
+---
+title: "report"
+author: "Lydia Maher"
+date: "October 14, 2016"
+output: pdf_document
+---
+
+---
+```{r, echo = FALSE}
+setwd("C:/Users/Lydia/Documents/Stat159/hw03")
+Advertising <- read.csv("./data/Advertising.csv")
+residual_sum_squares = function(x){
+  sum(x$residuals^2)
+}
+total_sum_squares = function(x){
+  sum((x$fitted.values - mean(x$fitted.values))^2) + sum(x$residuals^2)
+}
+r_squared = function(x){
+  r = 1-(residual_sum_squares(x)/total_sum_squares(x))
+  return(r)
+}
+f_statistic = function(x){
+  f = ((total_sum_squares(x)-residual_sum_squares(x))/(length(x$coefficient)-1)) / (residual_sum_squares(x)/(length(x$residuals) - length(x$coefficient)))
+  return(f)
+}
+residual_std_error = function(x){
+  sqrt(sum(x$residuals^2)/(length(x$residuals) - length(x$coefficient)))
+}
+load("./data/regression.Rdata")
+load("./data/correlation-matrix.Rdata")
+```
+
+#Abstract
+A report detailing the performance of a simple regression analysis, based on the examples given in chapter 3 of the book **An Introduction to Statistical Learning**. In this report, we reproduce some of the graphics and statistics included in that chapter.
+
+#Introduction
+The overarching goal of the project is to see the how the amount of sales is affected by the variables TV, Radio, Newspaper. In order to do this, we undertake analysis to see whether there is a concrete relationship between sales and amount of money spent on advertising. This advertising is split into three different media formats: TV, Radio and Newspaper. By developing a model which predicts sales based on funds allotted to each media domain, we can determine the optimal allocation of funds and achieve the greatest amount of sales. 
+
+#Data
+We are using the dataset given in the book entitled "Advertising.csv". It contains the data for 200 different markets, with the amount spent on TV, Radio and Newspaper advertising (in thousands of dollars) and the amount of sales this spending produced (in thousands of units).
+
+#Methodology
+To carry out this analysis, we are using the multiple linear regression model: Sales = (Beta0) + (Beta1)TV + (Beta2)Radio + (Beta3)Newspaper + error. 
+These coefficients are estimated with regression and least-squares in R.
+
+#Results
+Here is a table with the resulting co-efficient values:
+
+
+
+```{r, echo=FALSE, comment=NA, eval = FALSE}
+
+names(dimnames(reg_coefficients)) <- list("", "Table 1:Information about Regression Coefficients")
+reg_coefficients
+```
+
+
+Here are scatterplots showing the data compared to the regression (error for each point also drawn onto the graph):
+
+![](C:/Users/Lydia/Documents/Stat159/hw03/images/scatterplot-radio-sales.png)
+Figure 1: Radio Scatterplot
+
+![](C:/Users/Lydia/Documents/Stat159/hw03/images/scatterplot-tv-sales.png)
+Figure 2: TV Scatterplot
+
+![](C:/Users/Lydia/Documents/Stat159/hw03/images/scatterplot-newspaper-sales.png)
+Figure 3: TV Scatterplot
+
+We can see that there is by far the most correlation between TV and sales than between any of the other variables. 
+
+Observing the quality of the fit of our model:
+
+![](C:/Users/Lydia/Documents/Stat159/hw03/images/residual-plot.png)
+Figure 4: Residual Plot
+
+![](C:/Users/Lydia/Documents/Stat159/hw03/images/scale-location-plot.png)
+Figure 5: Scale Location Plot
+
+![](C:/Users/Lydia/Documents/Stat159/hw03/images/normal-qq-plot.png)
+Figure 6: Normal QQ Plot
+
+#Conclusions
+According to our data, there is a positive correlation between TV and Sales of about 0.6. However, our model is by no means perfect and the simple regression has a lot of error as shown by the RSS statistic of 3.26. It would be useful if we had more data to be able to refine our model. Based on this simple analysis though, it would seem that more spending on TV advertising will result in more sales.
+

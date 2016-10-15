@@ -1,0 +1,16 @@
+.PHONY: all data clean tests
+
+all: eda regression report
+
+data:
+	curl http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv -o "./data/Advertising.csv"
+clean:
+	rm ./report/report.pdf ./report/report.html
+tests:
+	RScript ./code/test-that.R
+eda:
+	RScript ./scripts/eda-script.R
+report:
+	pandoc ./report/report.Rmd -s -o ./report/report.pdf
+regression:
+	RScript ./scripts/regression-script.R
